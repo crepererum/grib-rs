@@ -116,13 +116,12 @@ fn decode_jp2(stream: Stream) -> Result<impl Iterator<Item = i32>, Jpeg2000CodeS
         // See https://github.com/noritada/grib-rs/issues/3 for more info.
         // When pure Rust implementations of JPEG 2000 decoder become available,
         // such a workaround will no longer be necessary.
-        let vec = unsafe {
+        let iter = unsafe {
             std::slice::from_raw_parts(comp_gray.data, (width * height) as usize)
                 .iter()
                 .map(|x| *x as i32)
-                .collect::<Vec<_>>()
         };
-        Ok(vec.into_iter())
+        Ok(iter)
     } else {
         Err(Jpeg2000CodeStreamDecodeError::NotSupported)
     }
